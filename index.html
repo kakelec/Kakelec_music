@@ -53,5 +53,19 @@
   <script src="js/js/js/songs.js"></script>
   <script src="js/js/js/js/submit.js"></script>
   <script src="js/js/js/js/js/admin.js"></script>
+
+  <script>
+    setTimeout(function () {
+      showErr([
+        "supabase:" + !!window.supabase,
+        "config:" + !!window.APP_CONFIG,
+        "i18n:" + !!window.I18N,
+        "app:" + !!window.App,
+        "routes:" + (window.App ? Object.keys(App.routes).join(",") : "-"),
+        "lang:" + (window.I18N ? I18N.lang : "-"),
+        "ready:" + document.readyState
+      ].join(" | "));
+    }, 4000);
+  </script>
 </body>
 </html>
