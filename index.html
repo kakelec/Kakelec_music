@@ -1,1 +1,57 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1117">
+  <title>Kakelek</title>
+  <link rel="stylesheet" href="js/css/style.css">
+</head>
+<body>
+  <script>
+    function showErr(text) {
+      var d = document.createElement("div");
+      d.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99;background:#7a1010;color:#fff;padding:8px;font:12px monospace;direction:ltr;word-break:break-all";
+      d.textContent = text;
+      document.documentElement.appendChild(d);
+    }
+    window.addEventListener("error", function (e) {
+      if (e.target && e.target !== window) {
+        showErr("Failed to load: " + (e.target.src || e.target.href));
+      } else {
+        showErr("JS error: " + e.message + " (" + String(e.filename || "").split("/").pop() + ":" + e.lineno + ")");
+      }
+    }, true);
+    window.addEventListener("unhandledrejection", function (e) {
+      showErr("Error: " + ((e.reason && e.reason.message) || e.reason));
+    });
+  </script>
 
+  <div id="lang-screen" class="lang-screen hidden"></div>
+
+  <div id="shell" class="hidden">
+    <header class="topbar">
+      <span class="brand" data-i18n="app_name"></span>
+      <select id="lang-select"></select>
+    </header>
+
+    <main id="app" class="container"></main>
+
+    <div id="player" class="player hidden">
+      <div class="now" id="player-title"></div>
+      <audio id="audio" controls></audio>
+    </div>
+
+    <nav class="bottomnav" id="nav"></nav>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/js/auth.js"></script>
+  <script src="js/js/js/songs.js"></script>
+  <script src="js/js/js/js/submit.js"></script>
+  <script src="js/js/js/js/js/admin.js"></script>
+</body>
+</html>
