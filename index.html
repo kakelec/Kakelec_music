@@ -10,10 +10,17 @@
 <body>
   <script>
     function showErr(text) {
+      var box = document.getElementById("dbg");
+      if (!box) {
+        box = document.createElement("div");
+        box.id = "dbg";
+        box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99;max-height:70vh;overflow:auto";
+        document.documentElement.appendChild(box);
+      }
       var d = document.createElement("div");
-      d.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99;background:#7a1010;color:#fff;padding:8px;font:12px monospace;direction:ltr;word-break:break-all";
+      d.style.cssText = "background:#7a1010;color:#fff;padding:6px 8px;margin-bottom:2px;font:12px monospace;direction:ltr;word-break:break-all";
       d.textContent = text;
-      document.documentElement.appendChild(d);
+      box.appendChild(d);
     }
     window.addEventListener("error", function (e) {
       if (e.target && e.target !== window) {
@@ -56,16 +63,18 @@
 
   <script>
     setTimeout(function () {
-      showErr([
-        "supabase:" + !!window.supabase,
-        "config:" + !!window.APP_CONFIG,
-        "i18n:" + !!window.I18N,
-        "app:" + !!window.App,
-        "routes:" + (window.App ? Object.keys(App.routes).join(",") : "-"),
-        "lang:" + (window.I18N ? I18N.lang : "-"),
-        "ready:" + document.readyState
-      ].join(" | "));
-    }, 4000);
+      showErr("app:" + !!window.App + " | lang:" + (window.I18N ? I18N.lang : "-"));
+      ["js/app.js", "js/js/auth.js"].forEach(function (p) {
+        fetch(p + "?v=" + Date.now()).then(function (r) {
+          return r.text().then(function (tx) {
+            var msg = p + " status " + r.status + " len " + tx.length +
+              " start[" + tx.slice(0, 40).replace(/\s+/g, " ") + "] end[" + tx.slice(-40).replace(/\s+/g, " ") + "]";
+            try { new Function(tx); } catch (e) { msg += " SYNTAX: " + e.message; }
+            showErr(msg);
+          });
+        }).catch(function (e) { showErr(p + " fetch error " + e.message); });
+      });
+    }, 3000);
   </script>
 </body>
 </html>
