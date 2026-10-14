@@ -10,17 +10,12 @@
 <body>
   <script>
     function showErr(text) {
-      var box = document.getElementById("dbg");
-      if (!box) {
-        box = document.createElement("div");
-        box.id = "dbg";
-        box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99;max-height:70vh;overflow:auto";
-        document.documentElement.appendChild(box);
-      }
       var d = document.createElement("div");
-      d.style.cssText = "background:#7a1010;color:#fff;padding:6px 8px;margin-bottom:2px;font:12px monospace;direction:ltr;word-break:break-all";
+      d.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99;background:#7a1010;color:#fff;padding:8px;font:12px monospace;direction:ltr;word-break:break-all";
       d.textContent = text;
-      box.appendChild(d);
+      d.onclick = function () { d.remove(); };
+      document.documentElement.appendChild(d);
+      setTimeout(function () { d.remove(); }, 10000);
     }
     window.addEventListener("error", function (e) {
       if (e.target && e.target !== window) {
@@ -60,21 +55,5 @@
   <script src="js/js/js/songs.js"></script>
   <script src="js/js/js/js/submit.js"></script>
   <script src="js/js/js/js/js/admin.js"></script>
-
-  <script>
-    setTimeout(function () {
-      showErr("app:" + !!window.App + " | lang:" + (window.I18N ? I18N.lang : "-"));
-      ["js/app.js", "js/js/auth.js"].forEach(function (p) {
-        fetch(p + "?v=" + Date.now()).then(function (r) {
-          return r.text().then(function (tx) {
-            var msg = p + " status " + r.status + " len " + tx.length +
-              " start[" + tx.slice(0, 40).replace(/\s+/g, " ") + "] end[" + tx.slice(-40).replace(/\s+/g, " ") + "]";
-            try { new Function(tx); } catch (e) { msg += " SYNTAX: " + e.message; }
-            showErr(msg);
-          });
-        }).catch(function (e) { showErr(p + " fetch error " + e.message); });
-      });
-    }, 3000);
-  </script>
 </body>
 </html>
